@@ -4,14 +4,14 @@ import SwiftUI
 @main
 struct EnglishAppApp: App {
     let container: ModelContainer = {
-        let container = try! ModelContainer(for: Pack.self, Word.self)
-        Seeder.seedIfEmpty(container.mainContext)
+        let container = try! ModelContainer(for: Pack.self, Word.self, StudyEvent.self)
+        Seeder.syncIfNeeded(container.mainContext)
         return container
     }()
 
     var body: some Scene {
         WindowGroup {
-            PackListView()
+            RootView()
         }
         .modelContainer(container)
     }

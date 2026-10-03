@@ -16,13 +16,24 @@ Free iOS vocabulary trainer (Reword-style prototype). Swipe cards, spaced repeti
 - `Pack` has many `Word`. Word status: `new`, `learning`, `known`, `learned`. A pack's "learned" count = known + learned.
 - Swipe right on a new word → `known`. Swipe left → `learning`, step 0.
 - SRS ladder in `SRS.swift`: 1 min, 20 min, 1 d, 3 d, 7 d, 30 d. Right on a learning word advances a step (past the last → `learned`); left resets to step 0.
-- Study queue: due learning words first (earliest due), then random new words.
-- Seed data: `EnglishApp/Resources/packs.json` (name, summary, words with term/meaning), loaded once when no packs exist. Changing the JSON does not affect an existing install; reset the simulator app to reseed.
+- Two study modes (`StudyMode`): `learnNew` serves random `new` words from all selected packs (`Pack.isSelected`; first seed pack starts selected); `review` serves due `learning` words across all packs (earliest due first). A left-swiped new word comes back via review after 1 min.
+- Every swipe logs a `StudyEvent` (`learned` = left on new, `known` = right on new, `repeated` = any swipe on a learning word). Dashboard heatmap and weekly chart read these.
+- Daily goal (`@AppStorage`, chosen on the Learn dashboard, default 10) caps newly-learned words per day: `learned` events today (words swiped as unknown; `known` swipes do not count). `StudyView` shows the "great learner" screen once reached; Repeat is never capped.
+- Streak = consecutive days with any `StudyEvent`; today being empty doesn't break it yet (`ActivityStats.streak`).
+- Display name and daily goal live in `@AppStorage` (keys in `Preferences`). In Vocabulary, tapping a row toggles selection; the right chevron opens the pack's word list.
+- Seed data: `EnglishApp/Resources/packs.json`, generated from the Oxford 3000/5000 Anki deck (`Oxford_3000_and_5000_English_with_Ukrainian_Translation.apkg`, gitignored): one pack per CEFR level ("Oxford A1"…"C1", 5948 words). Word fields: `term`, `pos`, Ukrainian `translation` (machine-translated, some are poor), `ipaUK/US`, `audioUK/US` (remote mp3), `image` (remote, empty for placeholders), 5 `examples` (`en`/`uk`, target word wrapped in `**`). `Seeder.syncIfNeeded` runs the import only when `contentVersion` (in `Seeder.swift`) differs from the stored one — bump it whenever packs.json changes. The import upserts by pack name and word (term + pos), preserves progress, deletes packs missing from the bundle, and selects the first pack if none is selected. Import takes several seconds on first launch (debug build ~6 s).
+- Word display: card back and `WordDetailView` use `WordInfo` (image, translation, POS, UK/US IPA with play buttons via `Pronunciation`, examples). Audio and images need network. Only Ukrainian exists in the data; the earlier Ukrainian/Russian switcher was removed.
+- Study card flips on tap (`FlipCard` in `SwipeCard.swift`, Y-axis, face swaps at 90°). Vocabulary word list dims mastered (known/learned) words.
+- Backup (`Data/Backup.swift`, `Views/Menu/BackupSection.swift`): Menu → Create backup (JSON via `fileExporter`) / Restore (via `fileImporter`). Contains non-new word progress keyed by pack name + term + pos, pack selection, all `StudyEvent`s and the three settings. Restore is a full replace after confirmation. Bump `Backup.currentVersion` if the format changes.
+- Theme: Menu picker System / Light / Dark (`AppTheme`, applied via `preferredColorScheme` in `RootView`). Palette in `Views/Theme/Theme.swift` (background / card / accent / highlight, light and dark variants from the user's hex palettes); use these tokens, not system colors, for surfaces. Screens apply `themedScreen()` for the background.
 
 ## Layout
-- `EnglishApp/Domain/` — `Word`, `Pack` (SwiftData models; `Pack.nextWord` is the study-queue rule), `SRS.swift` (ladder + `Word.swipe`).
-- `EnglishApp/Data/Seeder.swift` — JSON import. `EnglishApp/Resources/packs.json` — seed packs.
-- `EnglishApp/Views/` — `PackListView`, `StudyView` (session flow only), `SwipeCard` (gesture + reveal state).
+- `EnglishApp/Domain/` — SwiftData models `Word`, `Pack`, `StudyEvent`; `SRS.swift` (ladder + `Word.swipe`, returns the event kind); `StudyQueue.swift` (`StudyMode`, next-word rules); `ActivityStats.swift` (heatmap/weekly aggregation).
+- `EnglishApp/Data/` — `Seeder` (JSON import), `Backup`, `Pronunciation` (AVPlayer). `EnglishApp/Resources/packs.json` — seed packs.
+- `EnglishApp/Views/` — `RootView` (tab bar: Learn / Vocabulary / Menu), `Learn/` (dashboard with streak, `DailyGoalCard`, `ActivityHeatmap` = last 6 months in per-month blocks with weekday labels, `WeeklyChart` via Swift Charts), `Vocabulary/` (pack list, pack words with search and A–Z / status sort), `Word/` (`WordInfo`, `WordDetailView`), `Study/` (`StudyView` session flow, `SwipeCard` gesture + reveal), `Menu/` (name, theme, backup, reset progress, version), `Theme/` (palette + `AppTheme`).
+
+## SwiftData rules
+Every new non-optional `@Model` property needs a default value, otherwise the store fails to migrate on existing installs (the app then crashes at launch).
 
 ## Not built yet
 Custom packs / CSV import, review notifications, tests.

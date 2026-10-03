@@ -13,11 +13,18 @@ enum SRS {
 }
 
 extension Word {
-    func swipe(_ direction: SwipeDirection, now: Date = .now) {
+    func swipe(_ direction: SwipeDirection, now: Date = .now) -> StudyEventKind {
+        let kind = eventKind(for: direction)
         switch direction {
         case .right: markRemembered(now: now)
         case .left: markForgotten(now: now)
         }
+        return kind
+    }
+
+    private func eventKind(for direction: SwipeDirection) -> StudyEventKind {
+        guard status != .learning else { return .repeated }
+        return direction == .right ? .known : .learned
     }
 
     private func markRemembered(now: Date) {
