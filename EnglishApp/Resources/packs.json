@@ -1,0 +1,80 @@
+[
+  {
+    "name": "Everyday Essentials",
+    "summary": "Common words for daily conversation (B1)",
+    "words": [
+      {"term": "reliable", "meaning": "able to be trusted to do what is expected"},
+      {"term": "afford", "meaning": "to have enough money to pay for something"},
+      {"term": "improve", "meaning": "to become or make something better"},
+      {"term": "suggest", "meaning": "to put forward an idea for consideration"},
+      {"term": "avoid", "meaning": "to keep away from something or someone"},
+      {"term": "achieve", "meaning": "to succeed in reaching a goal"},
+      {"term": "borrow", "meaning": "to take something and return it later"},
+      {"term": "lend", "meaning": "to give something to someone for a short time"},
+      {"term": "recipe", "meaning": "instructions for cooking a dish"},
+      {"term": "neighbour", "meaning": "a person living near you"},
+      {"term": "schedule", "meaning": "a plan of times when things will happen"},
+      {"term": "luggage", "meaning": "bags and suitcases for travelling"},
+      {"term": "delay", "meaning": "to make something happen later than planned"},
+      {"term": "refund", "meaning": "money paid back to you"},
+      {"term": "furniture", "meaning": "tables, chairs, beds and similar items"},
+      {"term": "rent", "meaning": "to pay money to use something owned by another"},
+      {"term": "journey", "meaning": "an act of travelling from one place to another"},
+      {"term": "invite", "meaning": "to ask someone to come to an event"},
+      {"term": "annoying", "meaning": "making you feel slightly angry"},
+      {"term": "available", "meaning": "free to use or to do something"}
+    ]
+  },
+  {
+    "name": "Work & Career",
+    "summary": "Office and professional vocabulary (B2)",
+    "words": [
+      {"term": "deadline", "meaning": "the time by which something must be finished"},
+      {"term": "colleague", "meaning": "a person you work with"},
+      {"term": "negotiate", "meaning": "to discuss something to reach an agreement"},
+      {"term": "promote", "meaning": "to raise someone to a higher position"},
+      {"term": "resign", "meaning": "to officially leave your job"},
+      {"term": "salary", "meaning": "fixed regular payment for work"},
+      {"term": "agenda", "meaning": "a list of items to discuss at a meeting"},
+      {"term": "delegate", "meaning": "to give a task to someone else"},
+      {"term": "workload", "meaning": "the amount of work a person has to do"},
+      {"term": "stakeholder", "meaning": "a person with an interest in a business or project"},
+      {"term": "quarterly", "meaning": "happening every three months"},
+      {"term": "reimburse", "meaning": "to pay back money someone has spent"},
+      {"term": "appraisal", "meaning": "an assessment of someone's job performance"},
+      {"term": "outsource", "meaning": "to hire an outside company to do work"},
+      {"term": "feasible", "meaning": "possible and likely to be achieved"},
+      {"term": "streamline", "meaning": "to make a process simpler and more efficient"},
+      {"term": "mentor", "meaning": "an experienced person who advises a less experienced one"},
+      {"term": "overtime", "meaning": "extra hours worked beyond normal hours"},
+      {"term": "freelance", "meaning": "working for different companies rather than one employer"},
+      {"term": "bottleneck", "meaning": "a point that slows down a process"}
+    ]
+  },
+  {
+    "name": "Academic Core",
+    "summary": "Words common in academic texts (C1)",
+    "words": [
+      {"term": "ambiguous", "meaning": "having more than one possible meaning"},
+      {"term": "coherent", "meaning": "logical and well organised"},
+      {"term": "hypothesis", "meaning": "an idea proposed to be tested"},
+      {"term": "mitigate", "meaning": "to make something less severe"},
+      {"term": "substantial", "meaning": "large in amount or importance"},
+      {"term": "whereas", "meaning": "in contrast to the fact that"},
+      {"term": "inevitable", "meaning": "certain to happen; unavoidable"},
+      {"term": "paradigm", "meaning": "a typical model or pattern of something"},
+      {"term": "corroborate", "meaning": "to confirm with additional evidence"},
+      {"term": "scrutinize", "meaning": "to examine very carefully"},
+      {"term": "plausible", "meaning": "seeming reasonable or probable"},
+      {"term": "undermine", "meaning": "to weaken gradually"},
+      {"term": "preliminary", "meaning": "coming before the main part; initial"},
+      {"term": "discrepancy", "meaning": "a difference between things that should match"},
+      {"term": "elaborate", "meaning": "to give more detail about something"},
+      {"term": "implicit", "meaning": "suggested but not directly stated"},
+      {"term": "notion", "meaning": "an idea or belief"},
+      {"term": "reinforce", "meaning": "to strengthen or support"},
+      {"term": "contemporary", "meaning": "belonging to the present time"},
+      {"term": "arbitrary", "meaning": "based on random choice rather than reason"}
+    ]
+  }
+]
