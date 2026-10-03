@@ -30,6 +30,7 @@ Free iOS vocabulary trainer (Reword-style prototype). Swipe cards, spaced repeti
 - Theme: Menu picker System / Light / Dark (`AppTheme`, applied via `preferredColorScheme` in `RootView`). Palette in `Views/Theme/Theme.swift` (background / card / accent / highlight, light and dark variants from the user's hex palettes); use these tokens, not system colors, for surfaces. Screens apply `themedScreen()` for the background.
 
 ## Layout
+- `README.md` — public-facing overview + setup; screenshots in `docs/screenshots/` (taken from a throwaway simulator with synthetic activity data). Update both when features or setup steps change.
 - `EnglishApp/Domain/` — SwiftData models `Word`, `Pack`, `StudyEvent`; `SRS.swift` (ladder + `Word.swipe`, returns the event kind); `StudyQueue.swift` (`StudyMode`, next-word rules); `ActivityStats.swift` (heatmap/weekly aggregation).
 - `EnglishApp/Assets.xcassets/AppIcon.appiconset` — app icon (1024 px PNG, made from the root `icon.jpeg`; the feather quill). Single-size icon set, no alpha.
 - `EnglishApp/Data/` — `Seeder` (JSON import), `Backup`, `Pronunciation` (AVPlayer). `EnglishApp/Resources/packs.json` — seed packs.
