@@ -10,6 +10,8 @@ Free iOS vocabulary trainer (Reword-style prototype). Swipe cards, spaced repeti
 ## Commands
 - `just build` — incremental simulator build (iPhone 17 Pro) into `build/`.
 - `just run` — build, boot simulator, install, launch with console streaming (blocks; Ctrl+C stops streaming only).
+- Device ids and the signing team live in `.env` (gitignored; template in `.env.example`: `PHONE_UDID`, `PHONE_ID`, `TEAM_ID`, `BUNDLE_ID`, `SIMULATOR`), loaded by the justfile. The project file only holds the placeholder bundle id `com.example.englishapp`; the justfile overrides it with `BUNDLE_ID` on every build. Never hardcode these values or commit `.env`.
+- `just phone` — Release build signed with the free Personal Team from `.env`, install on the connected iPhone, launch (`phone-build` / `phone-install` for the parts). Free signing expires after 7 days; rerun to renew. Needs Developer Mode on and the profile trusted on the phone (Settings → General → VPN & Device Management).
 - Lint / type-check / tests: none configured. No test target exists; don't add one unprompted.
 
 ## Domain
@@ -29,8 +31,11 @@ Free iOS vocabulary trainer (Reword-style prototype). Swipe cards, spaced repeti
 
 ## Layout
 - `EnglishApp/Domain/` — SwiftData models `Word`, `Pack`, `StudyEvent`; `SRS.swift` (ladder + `Word.swipe`, returns the event kind); `StudyQueue.swift` (`StudyMode`, next-word rules); `ActivityStats.swift` (heatmap/weekly aggregation).
+- `EnglishApp/Assets.xcassets/AppIcon.appiconset` — app icon (1024 px PNG, made from the root `icon.jpeg`; the feather quill). Single-size icon set, no alpha.
 - `EnglishApp/Data/` — `Seeder` (JSON import), `Backup`, `Pronunciation` (AVPlayer). `EnglishApp/Resources/packs.json` — seed packs.
 - `EnglishApp/Views/` — `RootView` (tab bar: Learn / Vocabulary / Menu), `Learn/` (dashboard with streak, `DailyGoalCard`, `ActivityHeatmap` = last 6 months in per-month blocks with weekday labels, `WeeklyChart` via Swift Charts), `Vocabulary/` (pack list, pack words with search and A–Z / status sort), `Word/` (`WordInfo`, `WordDetailView`), `Study/` (`StudyView` session flow, `SwipeCard` gesture + reveal), `Menu/` (name, theme, backup, reset progress, version), `Theme/` (palette + `AppTheme`).
+
+- Reminders (`Domain/ReminderPlan.swift` pure planning, `Data/ReminderScheduler.swift` UNUserNotificationCenter, toggle in Menu): local notifications rebuilt whenever the app goes to background and cleared when it becomes active (so follow-ups stop once the user returns). Review reminders fire at word due times, learn reminders at 10:00 and 19:00 for the next 3 days (skipped when the goal is reached today or no new words are selected). Each reminder is a burst of 3 pings (+0, +15, +45 min). Quiet hours 22:00–08:00: a burst start inside them moves to 08:00, follow-ups inside them are dropped. Stays under the 64 pending-notification limit.
 
 ## SwiftData rules
 Every new non-optional `@Model` property needs a default value, otherwise the store fails to migrate on existing installs (the app then crashes at launch).

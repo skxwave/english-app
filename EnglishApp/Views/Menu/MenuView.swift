@@ -5,6 +5,7 @@ struct MenuView: View {
     @Environment(\.modelContext) private var context
     @AppStorage(Preferences.userName) private var userName = ""
     @AppStorage(Preferences.theme) private var theme = AppTheme.system
+    @AppStorage(Preferences.remindersEnabled) private var remindersEnabled = true
     @State private var confirmingReset = false
 
     var body: some View {
@@ -26,6 +27,14 @@ struct MenuView: View {
                     .pickerStyle(.segmented)
                 }
                 .listRowBackground(Theme.card)
+                Section {
+                    Toggle("Study reminders", isOn: $remindersEnabled)
+                } header: {
+                    Text("Reminders")
+                } footer: {
+                    Text("Repeat and learn nudges. Silent \(ReminderPlan.quietHoursLabel).")
+                }
+                .listRowBackground(Theme.card)
                 BackupSection()
                 Section {
                     Button("Reset progress", role: .destructive) { confirmingReset = true }
@@ -38,6 +47,13 @@ struct MenuView: View {
             }
             .themedScreen()
             .navigationTitle("Menu")
+            .onChange(of: remindersEnabled) { _, enabled in
+                if enabled {
+                    Task { await ReminderScheduler.requestAuthorization() }
+                } else {
+                    ReminderScheduler.clear()
+                }
+            }
             .confirmationDialog("Reset all progress?", isPresented: $confirmingReset, titleVisibility: .visible) {
                 Button("Reset", role: .destructive, action: resetProgress)
             }
