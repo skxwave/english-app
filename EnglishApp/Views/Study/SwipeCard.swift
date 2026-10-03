@@ -86,7 +86,7 @@ private struct WordFront: View {
                 Text(word.partOfSpeech).foregroundStyle(.secondary)
                 Text("Tap to flip").font(.footnote).foregroundStyle(.secondary)
                 if word.status == .learning {
-                    Text("Review · step \(word.step + 1)/\(SRS.intervals.count)")
+                    Text(word.step == 0 ? "Again" : "Review · \(word.step)/\(SRS.intervals.count)")
                         .font(.caption)
                         .foregroundStyle(.orange)
                 }

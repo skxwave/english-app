@@ -4,11 +4,12 @@ enum SwipeDirection {
     case left, right
 }
 
-// Ebbinghaus-style ladder. Index = step the word is currently on; the value is the wait
-// before its next review. Step 0 is the immediate in-session repeat.
+// Ebbinghaus-style ladder. `Word.step` counts successful recalls: step 0 means "not recalled
+// yet" (due now), and after the k-th recall the next review is `intervals[k - 1]` away.
+// A word recalled after the last interval is learned.
 enum SRS {
     static let intervals: [TimeInterval] = [
-        60, 20 * 60, 24 * 3600, 3 * 24 * 3600, 7 * 24 * 3600, 30 * 24 * 3600,
+        30 * 60, 2 * 3600, 24 * 3600, 3 * 24 * 3600, 7 * 24 * 3600, 30 * 24 * 3600,
     ]
 }
 
@@ -23,7 +24,7 @@ extension Word {
     }
 
     private func eventKind(for direction: SwipeDirection) -> StudyEventKind {
-        guard status != .learning else { return .repeated }
+        guard status == .new else { return .repeated }
         return direction == .right ? .known : .learned
     }
 
@@ -33,18 +34,19 @@ extension Word {
             return
         }
         let next = step + 1
-        guard next < SRS.intervals.count else {
+        guard next <= SRS.intervals.count else {
             status = .learned
             dueDate = nil
             return
         }
         step = next
-        dueDate = now.addingTimeInterval(SRS.intervals[next])
+        dueDate = now.addingTimeInterval(SRS.intervals[next - 1])
     }
 
+    // Persisted immediately so a missed word isn't lost if the round is abandoned.
     private func markForgotten(now: Date) {
         status = .learning
         step = 0
-        dueDate = now.addingTimeInterval(SRS.intervals[0])
+        dueDate = now
     }
 }

@@ -16,7 +16,7 @@ A free, offline-first iOS app for learning English vocabulary with swipe cards a
 ## ✨ Features
 
 - 🃏 **Swipe cards**: swipe right if you know the word, left if you don't. Tap a card to flip it.
-- 🧠 **Spaced repetition**: unknown words come back after 1 min, 20 min, 1 day, 3 days, 7 days and 30 days. A miss resets the word to the first step.
+- 🧠 **Spaced repetition**: a word you miss comes back in the same round, sooner each time you miss it, until you get it right. Then it returns for review after 30 min, 2 hours, 1 day, 3 days, 7 days and 30 days; a miss in any review brings it back in that round too and restarts its schedule.
 - 📖 **5,948 Oxford words**: levels A1–C1, each with Ukrainian translation, part of speech, UK/US transcription and audio, 5 example sentences and an illustration.
 - 🎯 **Daily goal**: pick how many new words you want per day; the app stops and congratulates you when you reach it.
 - 🔥 **Streak and stats**: day streak, a monthly activity heatmap and a weekly chart of learned, known and repeated words.
@@ -32,7 +32,7 @@ A free, offline-first iOS app for learning English vocabulary with swipe cards a
 4. Set your daily goal on the Learn tab and keep the streak going.
 5. **Menu tab**: name, theme, reminders, backup and reset.
 
-Words you swipe right on a new card count as known right away. Words you swipe left on enter the repetition ladder.
+A new word you swipe right counts as already known and doesn't count toward your daily goal. A new word you swipe left stays in the round until you swipe it right, and then enters the repetition schedule.
 
 ## 🚀 Getting started
 

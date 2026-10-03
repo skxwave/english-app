@@ -7,29 +7,20 @@ struct StudyView: View {
     @Query private var words: [Word]
     @Query private var events: [StudyEvent]
     @AppStorage(Preferences.dailyGoal) private var dailyGoal = Preferences.defaultDailyGoal
-    @State private var current: Word?
-    @State private var loaded = false
+    @State private var session: StudySession?
+    // Distinct per card so a missed word shown again right away still gets a fresh card view.
+    @State private var cardNumber = 0
 
     var body: some View {
         VStack(spacing: 16) {
-            if goalReached {
-                StatusMessage(
-                    systemImage: "trophy.fill", tint: Theme.highlight,
-                    title: "Daily goal reached",
-                    detail: "You're a great learner! See you tomorrow."
-                )
-            } else if let current {
+            if let current = session?.current {
                 SwipeCard(word: current, onSwipe: handleSwipe)
-                    .id(ObjectIdentifier(current))
+                    .id(cardNumber)
                 Text("← don't know      know →")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
-            } else if loaded {
-                StatusMessage(
-                    systemImage: "checkmark.circle", tint: Theme.accent,
-                    title: "All caught up", detail: caughtUpDetail,
-                    retry: advance
-                )
+            } else if session != nil {
+                finished
             }
         }
         .padding()
@@ -37,11 +28,32 @@ struct StudyView: View {
         .background(Theme.background.ignoresSafeArea())
         .navigationTitle(mode == .learnNew ? "Learn" : "Repeat")
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear(perform: advance)
+        .onAppear(perform: startSession)
     }
 
     private var goalReached: Bool {
         mode == .learnNew && ActivityStats.newWordsToday(events) >= dailyGoal
+    }
+
+    @ViewBuilder
+    private var finished: some View {
+        if goalReached {
+            StatusMessage(
+                systemImage: "trophy.fill", tint: Theme.highlight,
+                title: "Daily goal reached",
+                detail: "You're a great learner! See you tomorrow."
+            )
+        } else {
+            StatusMessage(
+                systemImage: "checkmark.circle", tint: Theme.accent,
+                title: "All caught up", detail: caughtUpDetail,
+                retry: retryAction
+            )
+        }
+    }
+
+    private var retryAction: (() -> Void)? {
+        mode == .review ? { startSession() } : nil
     }
 
     private var caughtUpDetail: String? {
@@ -55,14 +67,18 @@ struct StudyView: View {
     }
 
     private func handleSwipe(_ direction: SwipeDirection) {
-        guard let current else { return }
-        context.insert(StudyEvent(kind: current.swipe(direction)))
-        advance()
+        guard let kind = session?.swipe(direction) else { return }
+        context.insert(StudyEvent(kind: kind))
+        cardNumber += 1
     }
 
-    private func advance() {
-        current = StudyQueue.next(mode, in: words)
-        loaded = true
+    private func startSession() {
+        session = StudySession(
+            mode: mode,
+            words: words,
+            remainingGoal: max(0, dailyGoal - ActivityStats.newWordsToday(events))
+        )
+        cardNumber += 1
     }
 }
 
